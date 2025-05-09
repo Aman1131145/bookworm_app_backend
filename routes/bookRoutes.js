@@ -12,7 +12,7 @@ router.post('/', protectRoute, async (req, res) => {
             return res.status(400).json({ message: "Please provide all fields" });
         }
 
-        const uploadResponse = await cloudinary.upload(image).catch(err => {
+        const uploadResponse = await cloudinary.uploader.upload(image).catch(err => {
             throw new Error("Cloudinary upload failed");
         });
         const imageUrl = uploadResponse.secure_url;
@@ -53,7 +53,7 @@ router.get('/', protectRoute, async (req, res) => {
             books,
             currentPage: page,
             totalBooks: totalBooks,
-            totalPags: Math.ceil(totalBooks / limit)
+            totalPages: Math.ceil(totalBooks / limit)
         });
     } catch (error) {
         console.log("Error in get all books route", error);
