@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 const generateToken = (userId) => {
-    jwt.sign({ userId }, process.env.JWT_SECRET, {
+    return jwt.sign({ userId }, process.env.JWT_SECRET, {
         expiresIn: '15d'
     })
 }
@@ -44,7 +44,9 @@ router.post('/register', async (req, res) => {
 
         await user.save();
 
+        console.log('Generating token with user id: ', user.id);
         const token = generateToken(user.id);
+        console.log('this is the token: ', token);
 
         res.status(201).json({
             token,
