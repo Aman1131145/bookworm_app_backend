@@ -12,7 +12,11 @@ router.post('/', protectRoute, async (req, res) => {
             return res.status(400).json({ message: "Please provide all fields" });
         }
 
-        const uploadResponse = await cloudinary.uploader.upload(image);
+        console.log("API Key available:", Boolean(process.env.CLOUDINARY_API_KEY));
+
+        const uploadResponse = await cloudinary.uploader.upload(image).catch(err => {
+            throw new Error("Cloudinary upload failed");
+        });
         const imageUrl = uploadResponse.secure_url;
 
         const newBook = new Book({
