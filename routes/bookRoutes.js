@@ -12,9 +12,7 @@ router.post('/', protectRoute, async (req, res) => {
             return res.status(400).json({ message: "Please provide all fields" });
         }
 
-        const uploadResponse = await cloudinary.uploader.upload(image).catch(err => {
-            throw new Error("Cloudinary upload failed");
-        });
+        const uploadResponse = await cloudinary.uploader.upload(image);
         const imageUrl = uploadResponse.secure_url;
 
         const newBook = new Book({
@@ -22,7 +20,7 @@ router.post('/', protectRoute, async (req, res) => {
             caption,
             rating,
             image: imageUrl,
-            user: req.user._id
+            user: req.user._id,
         });
 
         await newBook.save();
