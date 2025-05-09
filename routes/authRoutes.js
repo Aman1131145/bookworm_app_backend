@@ -53,6 +53,7 @@ router.post('/register', async (req, res) => {
                 username: user.username,
                 email: user.email,
                 profileImage: user.profileImage,
+                createdAt: user.createdAt
             }
         });
     } catch (error) {
@@ -74,7 +75,7 @@ router.post('/login', async (req, res) => {
         if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" })
 
         const token = generateToken(user._id);
-        
+
         res.status(201).json({
             token,
             user: {
@@ -82,6 +83,7 @@ router.post('/login', async (req, res) => {
                 username: user.username,
                 email: user.email,
                 profileImage: user.profileImage,
+                createdAt: new Date()
             }
         });
     } catch (error) {
