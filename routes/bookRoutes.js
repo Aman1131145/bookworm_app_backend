@@ -9,11 +9,13 @@ router.post('/', protectRoute, async (req, res) => {
         const { title, caption, rating, image } = req.body;
 
         if (!image || !title || !caption || !rating) {
-            return res.status(400).json({ messgae: "Please provide all fields" })
+            return res.status(400).json({ message: "Please provide all fields" });
         }
 
-        const uploadResponse = await cloudinary.upload(image);
-        const imageUrl = uploadResponse.secure_url
+        const uploadResponse = await cloudinary.upload(image).catch(err => {
+            throw new Error("Cloudinary upload failed");
+        });
+        const imageUrl = uploadResponse.secure_url;
 
         const newBook = new Book({
             title,
@@ -21,14 +23,15 @@ router.post('/', protectRoute, async (req, res) => {
             rating,
             image: imageUrl,
             user: req.user._id
-        })
+        });
 
         await newBook.save();
 
         res.status(201).json(newBook);
 
     } catch (error) {
-
+        console.error("Error in POST /books:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 
