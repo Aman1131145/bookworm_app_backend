@@ -24,7 +24,6 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Username should be at least 3 characters long' });
         }
 
-        // Check if user already exists
         const existingEmail = await User.findOne({ email });
         if (existingEmail) {
             return res.status(400).json({ message: 'Email already exists' });
@@ -34,7 +33,6 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Username already exists' });
         }
 
-        // Get random avatar
         const profileImage = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
 
         const user = new User({
@@ -58,7 +56,7 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Error in register route", error);
+        console.error("Error in register route:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
